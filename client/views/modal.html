@@ -1,0 +1,66 @@
+<div class="modal-header">
+  <h3 class="modal-title" id="modal-title">Add new client</h3>
+</div>
+<div class="modal-body" id="modal-body">
+  <form name="addForm" ng-submit="" novalidate>
+    <div class="form-group" ng-class="{ 'has-error': addForm.name.$invalid && !addForm.name.$pristine }">
+      <label>Name</label>
+      <input type="text" class="form-control" name="name" placeholder="Client name" ng-model="$ctrl.client.name" required>
+      <p ng-show="addForm.name.$invalid && !addForm.name.$pristine" class="help-block">Name is required.</p>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error': addForm.email.$invalid && !addForm.email.$pristine }">
+      <label>Email</label>
+      <input type="email" class="form-control" name="email" placeholder="Client email" ng-model="$ctrl.client.email" required>
+      <p ng-show="addForm.email.$invalid && !addForm.email.$pristine" class="help-block">A valid email is required.</p>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error': addForm.phone.$invalid && !addForm.phone.$pristine }">
+      <label>Phone</label>
+      <input type="text" class="form-control" name="phone" placeholder="Client phone" ng-model="$ctrl.client.phone" ng-pattern="/[1-9]{2}\d{8}/" ng-maxlength="10" required>
+      <p ng-show="addForm.phone.$invalid && !addForm.phone.$pristine" class="help-block">A valid 10-digit phone number is required (no characters).</p>
+    </div>
+    <label for="providers">Providers</label>
+    <div class="input-group">
+      <input type="text" class="form-control" name="provider" placeholder="New provider name" ng-model="$ctrl.client.provider">
+      <div class="input-group-btn">
+        <button class="btn" type="button" ng-disabled="!$ctrl.client.provider" ng-click="$ctrl.addProvider($ctrl.client.provider)">Add provider</button>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row" ng-repeat="provider in $ctrl.providers">
+          <div class="col-sm-1 vcenter">
+            <input type="checkbox" ng-value="provider"
+              ng-checked="$ctrl.providersSelected.indexOf(provider.id) > -1"
+              ng-click="$ctrl.toggleSelect(provider.id)">
+          </div>
+          <div class="col-sm-6 vcenter" ng-if="!provider.editable || provider.editable == false">
+            {{provider.name}}
+          </div>
+          <div class="col-sm-6 vcenter" ng-if="provider.editable == true">
+            <input type="text" class="form-control" name="{{'provider' + provider.id}}" value="{{provider.name}}" ng-model="provider.name" required>
+          </div>
+          <div class="col vcenter">
+            <button type="button" class="btn btn-default"
+                    aria-label="Left Align" ng-click="$ctrl.editProvider(provider)"
+                    ng-if="!provider.editable || provider.editable == false">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-default"
+                    aria-label="Left Align" ng-click="$ctrl.updateProvider(provider)"
+                    ng-if="provider.editable == true">
+              <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="$ctrl.deleteProvider(provider)">
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-danger" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+  <button class="btn btn-primary" type="button" ng-disabled="addForm.$invalid" ng-click="$ctrl.ok()">{{$ctrl.okBtn}}</button>
+</div>

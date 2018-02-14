@@ -1,0 +1,310 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Practical Test App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /api/v1
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+  # - application/x-www-form-urlencoded
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+#   /hello:
+#     # binds a127 app logic to a route
+#     x-swagger-router-controller: hello_world
+#     get:
+#       description: Returns 'Hello' to the caller
+#       # used as the method name of the controller
+#       operationId: hello
+#       parameters:
+#         - name: name
+#           in: query
+#           description: The name of the person to whom to say hello
+#           required: false
+#           type: string
+#       responses:
+#         "200":
+#           description: Success
+#           schema:
+#             # a pointer to a definition
+#             $ref: "#/definitions/HelloWorldResponse"
+#         # responses may fall through to errors
+#         default:
+#           description: Error
+#           schema:
+#             $ref: "#/definitions/ErrorResponse"
+  /clients:
+    x-swagger-router-controller: clients
+    get:
+      description: Returns a list of clients
+      operationId: getClients
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ClientsResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Creates a new client
+      operationId: newClient
+      parameters:
+        - name: client
+          in: body
+          description: The client information to be saved
+          schema:
+            $ref: '#/definitions/Client'
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /clients/{clientId}:
+    x-swagger-router-controller: clients
+    get:
+      description: Returns a specific client
+      operationId: getClient
+      parameters:
+        - name: clientId
+          in: path
+          description: The ID of the client to find
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/ClientResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      description: Update a specific client
+      operationId: updateClient
+      parameters:
+        - name: clientId
+          in: path
+          description: The ID of the client to update
+          required: true
+          type: string
+        - name: client
+          in: body
+          description: The new client information
+          required: true
+          schema:
+            $ref: '#/definitions/Client'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      description: Delete a specific client
+      operationId: deleteClient
+      parameters:
+        - name: clientId
+          in: path
+          description: The ID of the client to delete
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /providers:
+    x-swagger-router-controller: providers
+    get:
+      description: Returns a list of providers
+      operationId: getProviders
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ProvidersResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Creates a new provider
+      operationId: newProvider
+      parameters:
+        - name: provider
+          in: body
+          description: The provider information to be saved
+          schema:
+            $ref: '#/definitions/Provider'
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /providers/{providerId}:
+    x-swagger-router-controller: providers
+    put:
+      description: Update a specific provider
+      operationId: updateProvider
+      parameters:
+        - name: providerId
+          in: path
+          description: The ID of the provider to update
+          required: true
+          type: string
+        - name: provider
+          in: body
+          description: The new provider information
+          required: true
+          schema:
+            $ref: '#/definitions/Provider'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      description: Delete a specific provider
+      operationId: deleteProvider
+      parameters:
+        - name: providerId
+          in: path
+          description: The ID of the provider to delete
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /swagger:
+    x-swagger-pipe: swagger_raw
+definitions:
+  Client:
+    type: object
+    required:
+      - name
+      - email
+      - phone
+      - providers
+    properties:
+      name:
+        type: string
+        description: Client name
+      email:
+        type: string
+        description: Client email
+      phone:
+        type: string
+        description: Client phone
+      providers:
+        type: array
+        description: Array of providers
+        items:
+          type: number
+          description: Provider ID
+  Provider:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: Provider name
+  ClientsResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Client name
+        email:
+          type: string
+          description: Client email
+        phone:
+          type: string
+          description: Client phone
+        createdAt:
+          type: string
+          description: createdAt property from sequelize
+        updatedAt:
+          type: string
+          description: updatedAt property from sequelize
+  ClientResponse:
+    type: object
+    properties:
+      id:
+        type: number
+        description: Client ID
+      name:
+        type: string
+        description: Client name
+      email:
+        type: string
+        description: Client email
+      phone:
+        type: string
+        description: Client phone
+  ProvidersResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Provider name
+        createdAt:
+          type: string
+          description: createdAt property from sequelize
+        updatedAt:
+          type: string
+          description: updatedAt property from sequelize
+  SuccessResponse:
+    properties:
+      affected:
+        type: boolean
+  ErrorResponse:
+    # required:
+    #   - data
+    properties:
+      data:
+        type: string

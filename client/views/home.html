@@ -1,0 +1,53 @@
+<div ng-controller="ModalCtrl as $ctrl" class="modal-demo">
+
+<form>
+  <label>Search</label>
+  <input type="text" ng-model="vm.search" class="form-control">
+</form>
+
+<div class="row">
+  <div class="col-md-6">
+    <h2>Clients</h2>
+  </div>
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary pull-right" ng-click="$ctrl.open()">New Client</button>
+  </div>
+</div>
+
+<div ng-if="vm.clients.length == 0">
+  <p>There are no clients to show.</p>
+</div>
+
+<table ng-if="vm.clients.length > 0" class="table table-striped">
+  <thead>
+    <tr>
+      <th>
+        <a ng-href="#" ng-click="vm.sortBy('name')">Name</a>
+        <span class="sortorder" ng-show="vm.property === 'name'" ng-class="{reverse: vm.reverse}"></span>
+      </th>
+      <th>
+        <a ng-href="#" ng-click="vm.sortBy('email')">Email</a>
+        <span class="sortorder" ng-show="vm.property === 'email'" ng-class="{reverse: vm.reverse}"></span>
+      </th>
+      <th>
+        <a ng-href="#" ng-click="vm.sortBy('phone')">Phone</a>
+        <span class="sortorder" ng-show="vm.property === 'phone'" ng-class="{reverse: vm.reverse}"></span>
+      </th>
+      <th>Providers</th>
+      <th>Options</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="client in vm.clients | filter: vm.search | orderBy: vm.property:vm.reverse">
+      <th scope="row">{{client.name}}</th>
+      <td>{{client.email}}</td>
+      <td>{{client.phone | phoneFilter}}</td>
+      <td>{{client.providers}}</td>
+      <td><a ng-href="#" ng-click="$ctrl.open(client)">Edit</a></td>
+      <td><a ng-href="#" ng-click="vm.delete(client)">Delete</a></td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
